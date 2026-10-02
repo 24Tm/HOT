@@ -3,442 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الادخار والاستثمار الذكية</title>
+    <title>لوحة المدخرات - Ed5ar</title>
+    <!-- Tailwind CSS للتصميم السريع والجميل -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #059669;
-            --primary-light: #10b981;
-            --primary-bg: #ecfdf5;
-            --accent: #3b82f6;
-            --bg-main: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --danger: #ef4444;
-            --danger-bg: #fef2f2;
-            --border: #e2e8f0;
-            --radius: 16px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* رأس الصفحة */
-        header {
-            background: var(--card-bg);
-            padding: 20px 24px;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--border);
-        }
-
-        header h1 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-
-        .date-badge {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: var(--bg-main);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        /* البطاقات العامة */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            border: 1px solid var(--border);
-        }
-
-        .card-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* شبكة الملخص المالي */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .metric-card {
-            padding: 16px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .metric-card.saved { background: var(--primary-bg); border: 1px solid #a7f3d0; color: #065f46; }
-        .metric-card.target { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
-        .metric-card.remaining { background: var(--danger-bg); border: 1px solid #fecaca; color: #991b1b; }
-
-        .metric-title { font-size: 0.85rem; font-weight: 600; opacity: 0.9; }
-        .metric-value { font-size: 1.25rem; font-weight: 800; direction: ltr; text-align: right; }
-        
-        .metric-value input {
-            font-size: 1.25rem;
-            font-weight: 800;
-            border: none;
-            background: transparent;
-            text-align: right;
-            width: 100%;
-            color: inherit;
-            outline: none;
-            border-bottom: 1px dashed currentColor;
-        }
-
-        /* شريط التقدم */
-        .progress-section {
-            margin-top: 10px;
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .progress-track {
-            background: var(--bg-main);
-            height: 12px;
-            border-radius: 999px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, var(--accent), var(--primary-light));
-            height: 100%;
-            width: 0%;
-            border-radius: 999px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* نموذج إضافة إيداع جديد */
-        .deposit-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        @media (max-width: 600px) {
-            .deposit-form {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-control {
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            outline: none;
-            background: var(--bg-main);
-            color: var(--text-main);
-        }
-
-        .form-control:focus {
-            border-color: var(--accent);
-            background: white;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #047857; }
-        
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-        .btn-outline:hover { background: var(--border); color: var(--text-main); }
-
-        .btn-danger { background: var(--danger-bg); color: var(--danger); }
-        .btn-danger:hover { background: #fee2e2; }
-
-        /* سجل المعاملات (Scrollable) */
-        .transactions-list {
-            max-height: 280px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-left: 4px;
-        }
-
-        .transactions-list::-webkit-scrollbar { width: 5px; }
-        .transactions-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: var(--bg-main);
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .tx-info { display: flex; flex-direction: column; gap: 2px; }
-        .tx-title { font-weight: 700; font-size: 0.95rem; }
-        .tx-date { font-size: 0.75rem; color: var(--text-muted); }
-        
-        .tx-right { display: flex; align-items: center; gap: 15px; }
-        .tx-amount { font-weight: 800; color: var(--primary); direction: ltr; }
-        
-        .delete-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1rem;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        .delete-btn:hover { opacity: 1; }
-
-        .empty-state {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* شريط أسفل الأزرار */
-        .footer-actions {
-            display: flex;
-            gap: 10px;
-        }
+        body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8">
 
-<div class="app-container">
-    
-    <!-- الرأس -->
-    <header>
-        <h1>لوحة الادخار والهدف المالي</h1>
-        <div class="date-badge" id="currentDate"></div>
-    </header>
+    <div class="max-w-4xl mx-auto">
+        <!-- رأس الصفحة -->
+        <header class="bg-white shadow-md rounded-2xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">حوسبة المدخرات (Ed5ar)</h1>
+                <p class="text-sm text-gray-500">متابعة وحفظ المدخرات السحابية المحدثة فوراً</p>
+            </div>
+            <div id="connection-status" class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">
+                جاري الاتصال بقاعدة البيانات...
+            </div>
+        </header>
 
-    <!-- الملخص والمؤشرات -->
-    <div class="card">
-        <div class="metrics-grid">
-            <div class="metric-card saved">
-                <span class="metric-title">المبلغ المتوفر</span>
-                <span class="metric-value" id="totalSavedDisplay">0 ر.س</span>
-            </div>
-            <div class="metric-card target">
-                <span class="metric-title">الهدف الكلي</span>
-                <span class="metric-value">
-                    <input type="number" id="targetInput" value="500000" onchange="updateTarget()">
-                </span>
-            </div>
-            <div class="metric-card remaining">
-                <span class="metric-title">باقي عن الهدف</span>
-                <span class="metric-value" id="remainingDisplay">500,000 ر.س</span>
+        <!-- لوحة الملخص -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p class="text-sm text-gray-500 mb-1">إجمالي المدخرات</p>
+                <h2 id="total-savings" class="text-3xl font-bold text-green-600">0.00 ر.س</h2>
             </div>
         </div>
 
-        <!-- شريط التقدم المئوي -->
-        <div class="progress-section">
-            <div class="progress-info">
-                <span>نسبة الإنجاز نحو الهدف</span>
-                <span id="progressText">0%</span>
+        <!-- إضافة مبلغ جديد -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">إضافة مدخرات جديدة</h2>
+            <form id="saving-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">المبلغ (ر.س)</label>
+                    <input type="number" id="amount" step="0.01" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">السبب / الوصف</label>
+                    <input type="text" id="note" required placeholder="مثال: توفير شهري" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl transition">
+                        حفظ في السحابة ☁️
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- جدول الحركات السحابية -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-lg font-bold text-gray-800">سجل المدخرات</h2>
             </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="progressFill"></div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-sm">
+                            <th class="p-4">المبلغ</th>
+                            <th class="p-4">الوصف</th>
+                            <th class="p-4">التاريخ</th>
+                            <th class="p-4">الإجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="savings-table-body" class="divide-y divide-gray-100 text-gray-700 text-sm">
+                        <!-- تضاف البيانات ديناميكياً هنا -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- إضافة ادخار جديد مخصص -->
-    <div class="card">
-        <div class="card-title">إضافة مبلغ ادخار أو دفعة جديدة</div>
-        <form class="deposit-form" onsubmit="addTransaction(event)">
-            <input type="text" id="txTitleInput" class="form-control" placeholder="وصف الدفعة (مثال: ادخار شهر أكتوبر)" required>
-            <input type="number" id="txAmountInput" class="form-control" placeholder="المبلغ (ر.س)" required min="1">
-            <button type="submit" class="btn btn-primary">إضافة</button>
-        </form>
-    </div>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <!-- سجل المدخرات -->
-    <div class="card">
-        <div class="card-title">
-            <span>سجل المدخرات والدفعات</span>
-            <span style="font-size: 0.85rem; color: var(--text-muted);" id="txCountText">0 عمليات</span>
-        </div>
-        <div class="transactions-list" id="transactionsContainer">
-            <!-- يتم تعبئتها ديناميكياً -->
-        </div>
-    </div>
-
-    <!-- أزرار التحكم والنسخ الاحتياطي -->
-    <div class="footer-actions">
-        <button class="btn btn-outline" style="flex:1;" onclick="exportData()">تصدير نسخة احتياطية</button>
-        <button class="btn btn-danger" onclick="resetAllData()">إعادة ضبط الكل</button>
-    </div>
-
-</div>
-
-<script>
-    // الحالة والتخزين المحلي
-    let targetGoal = Number(localStorage.getItem('pro_v2_target')) || 500000;
-    let transactions = JSON.parse(localStorage.getItem('pro_v2_txs')) || [];
-
-    document.getElementById('targetInput').value = targetGoal;
-
-    // عرض التاريخ
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-SA', options);
-
-    function updateTarget() {
-        targetGoal = Number(document.getElementById('targetInput').value) || 0;
-        localStorage.setItem('pro_v2_target', targetGoal);
-        renderApp();
-    }
-
-    function addTransaction(e) {
-        e.preventDefault();
-        const titleInput = document.getElementById('txTitleInput');
-        const amountInput = document.getElementById('txAmountInput');
-
-        const newTx = {
-            id: Date.now(),
-            title: titleInput.value.trim(),
-            amount: Number(amountInput.value),
-            date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' })
+        // إعدادات مشروعك
+        const firebaseConfig = {
+          apiKey: "AIzaSyAcSBoqPSwOADYTRN6a_CUkHbxzaC0VxBs",
+          authDomain: "ed5ar-d1629.firebaseapp.com",
+          projectId: "ed5ar-d1629",
+          storageBucket: "ed5ar-d1629.firebasestorage.app",
+          messagingSenderId: "420069898432",
+          appId: "1:420069898432:web:2704f6ef14bb1a0c11d525",
+          measurementId: "G-E2X1LJWR0Z"
         };
 
-        transactions.unshift.call(transactions, newTx);
-        saveAndRender();
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        titleInput.value = '';
-        amountInput.value = '';
-    }
+        const statusBadge = document.getElementById("connection-status");
+        statusBadge.textContent = "متصل بالسحابة ✅";
+        statusBadge.className = "bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-semibold";
 
-    function deleteTransaction(id) {
-        transactions = transactions.filter(tx => tx.id !== id);
-        saveAndRender();
-    }
+        const form = document.getElementById("saving-form");
+        const tableBody = document.getElementById("savings-table-body");
+        const totalSavingsEl = document.getElementById("total-savings");
 
-    function saveAndRender() {
-        localStorage.setItem('pro_v2_txs', JSON.stringify(transactions));
-        renderApp();
-    }
+        // إضافة مدخرات جديدة لقاعدة البيانات
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById("amount").value);
+            const note = document.getElementById("note").value;
 
-    function renderApp() {
-        const container = document.getElementById('transactionsContainer');
-        container.innerHTML = '';
+            try {
+                await addDoc(collection(db, "savings"), {
+                    amount: amount,
+                    note: note,
+                    date: new Date().toLocaleDateString('ar-SA')
+                });
+                form.reset();
+            } catch (error) {
+                console.error("خطأ أثناء الحفظ: ", error);
+                alert("حدث خطأ أثناء حفظ البيانات!");
+            }
+        });
 
-        let totalSaved = 0;
+        // جلب البيانات ومزامنتها لحظياً من Firestore
+        const q = query(collection(db, "savings"));
+        onSnapshot(q, (snapshot) => {
+            let total = 0;
+            tableBody.innerHTML = "";
+            
+            if(snapshot.empty) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">لا توجد مدخرات مسجلة حتى الآن. ابدأ بإضافة مبلغ!</td></tr>`;
+                totalSavingsEl.textContent = "0.00 ر.س";
+                return;
+            }
 
-        if (transactions.length === 0) {
-            container.innerHTML = `<div class="empty-state">لا توجد مدخرات مسجلة حتى الآن. ابدأ بإضافة أول دفعة بالأعلى!</div>`;
-        } else {
-            transactions.forEach(tx => {
-                totalSaved += tx.amount;
-                const item = document.createElement('div');
-                item.className = 'transaction-item';
-                item.innerHTML = `
-                    <div class="tx-info">
-                        <span class="tx-title">${tx.title}</span>
-                        <span class="tx-date">${tx.date}</span>
-                    </div>
-                    <div class="tx-right">
-                        <span class="tx-amount">+${tx.amount.toLocaleString()} ر.س</span>
-                        <button class="delete-btn" onclick="deleteTransaction(${tx.id})" title="حذف">✕</button>
-                    </div>
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                total += Number(data.amount) || 0;
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-green-600">${data.amount} ر.س</td>
+                    <td class="p-4">${data.note}</td>
+                    <td class="p-4 text-gray-500">${data.date || '-'}</td>
+                    <td class="p-4">
+                        <button onclick="deleteItem('${docSnap.id}')" class="text-red-500 hover:text-red-700 text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition">حذف</button>
+                    </td>
                 `;
-                container.appendChild(item);
+                tableBody.appendChild(tr);
             });
-        }
 
-        const remaining = Math.max(0, targetGoal - totalSaved);
-        const percentage = targetGoal > 0 ? Math.min(100, Math.round((totalSaved / targetGoal) * 100)) : 0;
+            totalSavingsEl.textContent = total.toLocaleString('ar-SA') + " ر.س";
+        });
 
-        // تحديث الواجهة
-        document.getElementById('totalSavedDisplay').innerText = totalSaved.toLocaleString() + ' ر.س';
-        document.getElementById('remainingDisplay').innerText = remaining.toLocaleString() + ' ر.س';
-        document.getElementById('progressText').innerText = percentage + '%';
-        document.getElementById('progressFill').style.width = percentage + '%';
-        document.getElementById('txCountText').innerText = `${transactions.length} عملية`;
-    }
-
-    function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ target: targetGoal, transactions }));
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", "savings_backup.json");
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    }
-
-    function resetAllData() {
-        if (confirm('هل أنت متأكد من مسح جميع البيانات وإعادة التعيين بالكامل؟')) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    // التشغيل الأولي
-    renderApp();
-</script>
-
+        // دالة الحذف المتاحة عامة
+        window.deleteItem = async function(id) {
+            if(confirm("هل أنت متأكد من حذف هذا السجل؟")) {
+                try {
+                    await deleteDoc(doc(db, "savings", id));
+                } catch (error) {
+                    console.error("خطأ أثناء الحذف: ", error);
+                }
+            }
+        };
+    </script>
 </body>
 </html>
