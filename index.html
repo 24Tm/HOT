@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تجميع الادخار والهدف المالي</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --danger-bg: #ffebee;
+            --danger-text: #c62828;
+            --box-color: #1976d2;
+            --box-active: #43a047;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: #111;
+            margin-bottom: 20px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .summary-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .summary-table td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .summary-table td.label {
+            background-color: #fafafa;
+            width: 40%;
+        }
+
+        .summary-table td.value {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .target-row input {
+            width: 100%;
+            padding: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: left;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .remaining-row {
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .grid-box {
+            background-color: #e3f2fd;
+            border: 2px solid var(--box-color);
+            color: var(--box-color);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .grid-box.active {
+            background-color: var(--box-active);
+            border-color: #2e7d32;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-reset {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-reset:hover {
+            background-color: #ffcdd2;
+        }
+
+        .monthly-input-section {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+
+        .monthly-input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .monthly-input-section input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>تجميع الادخار</h2>
+
+    <!-- جدول الملخص -->
+    <table class="summary-table">
+        <thead>
+            <tr>
+                <th colspan="2">ملخص الحساب</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="label">المبلغ المتوفر</td>
+                <td class="value" id="totalSaved">0</td>
+            </tr>
+            <tr class="target-row">
+                <td class="label">الهدف الكلي</td>
+                <td class="value">
+                    <input type="number" id="targetInput" value="500000" onchange="updateValues()">
+                </td>
+            </tr>
+            <tr class="remaining-row">
+                <td class="label">باقي عن الهدف</td>
+                <td class="value" id="remainingAmount">500,000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- إدخال قيمة المربع الواحد (الدخل/الادخار الشهري) -->
+    <div class="monthly-input-section">
+        <label for="monthlyValueInput">قيمة المدخر الشهري لكل مربع (ريال):</label>
+        <input type="number" id="monthlyValueInput" value="5000" onchange="updateValues()">
+    </div>
+
+    <div class="section-title">خطة المربعات (اضغط على المربع لتفعيله عند إنجازه):</div>
+    
+    <!-- شبكة المربعات (مثال 20 مربعاً تمثل شهور أو دفعات) -->
+    <div class="grid-container" id="gridContainer">
+        <!-- سيتم إنشاؤها عبر البرمجة أو يدوياً -->
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetData()">إعادة ضبط البيانات</button>
+    </div>
+</div>
+
+<script>
+    const totalBoxes = 20; // عدد المربعات الكلي
+    let boxesState = JSON.parse(localStorage.getItem('boxesState')) || Array(totalBoxes).fill(false);
+    let targetGoal = localStorage.getItem('targetGoal') ? Number(localStorage.getItem('targetGoal')) : 500000;
+    let monthlyValue = localStorage.getItem('monthlyValue') ? Number(localStorage.getItem('monthlyValue')) : 5000;
+
+    document.getElementById('targetInput').value = targetGoal;
+    document.getElementById('monthlyValueInput').value = monthlyValue;
+
+    function initGrid() {
+        const container = document.getElementById('gridContainer');
+        container.innerHTML = '';
+        
+        for (let i = 0; i < totalBoxes; i++) {
+            const box = document.createElement('div');
+            box.classList.add('grid-box');
+            box.innerText = i + 1;
+            
+            if (boxesState[i]) {
+                box.classList.add('active');
+            }
+
+            box.onclick = () => {
+                boxesState[i] = !boxesState[i];
+                box.classList.toggle('active');
+                saveAndCalculate();
+            };
+
+            container.appendChild(box);
+        }
+        calculateTotals();
+    }
+
+    function updateValues() {
+        targetGoal = Number(document.getElementById('targetInput').value) || 0;
+        monthlyValue = Number(document.getElementById('monthlyValueInput').value) || 0;
+        saveAndCalculate();
+    }
+
+    function calculateTotals() {
+        const activeCount = boxesState.filter(Boolean).length;
+        const totalSaved = activeCount * monthlyValue;
+        const remaining = Math.max(0, targetGoal - totalSaved);
+
+        document.getElementById('totalSaved').innerText = totalSaved.toLocaleString();
+        document.getElementById('remainingAmount').innerText = remaining.toLocaleString();
+    }
+
+    function saveAndCalculate() {
+        localStorage.setItem('boxesState', JSON.stringify(boxesState));
+        localStorage.setItem('targetGoal', targetGoal);
+        localStorage.setItem('monthlyValue', monthlyValue);
+        calculateTotals();
+    }
+
+    function resetData() {
+        if (confirm('هل أنت متأكد من إعادة ضبط كافة البيانات؟')) {
+            boxesState = Array(totalBoxes).fill(false);
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // تشغيل التطبيق عند التحميل
+    initGrid();
+</script>
+
+</body>
+</html>
