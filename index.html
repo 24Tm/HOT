@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الادخار الذكية</title>
+    <title>لوحة الادخار الذكية والمرنة</title>
     <style>
         :root {
             --primary: #10b981;
@@ -52,7 +52,6 @@
 
         header h1 {
             font-size: 1.3rem;
-            color: var(--text-main);
         }
 
         .card {
@@ -63,7 +62,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* Summary Dashboard */
         .summary-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -79,35 +77,13 @@
             align-items: center;
         }
 
-        .summary-box.available {
-            background-color: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
-        }
+        .summary-box.available { background-color: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+        .summary-box.target { background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+        .summary-box.remaining { background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
 
-        .summary-box.target {
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
-        }
-
-        .summary-box.remaining {
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-        }
-
-        .summary-box .title {
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        .summary-box .value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            direction: ltr;
-        }
-
+        .summary-box .title { font-size: 0.95rem; font-weight: 600; }
+        .summary-box .value { font-size: 1.25rem; font-weight: 700; direction: ltr; }
+        
         .summary-box input {
             font-size: 1.25rem;
             font-weight: 700;
@@ -120,7 +96,6 @@
             border-bottom: 1px dashed currentColor;
         }
 
-        /* Progress Bar */
         .progress-container {
             margin-top: 15px;
         }
@@ -149,7 +124,6 @@
             border-radius: 999px;
         }
 
-        /* Settings Row */
         .settings-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -175,11 +149,6 @@
             background: var(--bg-main);
         }
 
-        .input-group input:focus {
-            border-color: var(--secondary);
-        }
-
-        /* Grid Section */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -191,59 +160,85 @@
             font-size: 1.05rem;
         }
 
-        .grid-boxes {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-
-        .box {
-            aspect-ratio: 1;
-            background: var(--bg-main);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+        /* حل مشكلة التكدس: قائمة ذات تمرير داخلي أنيق ومنظم */
+        .scrollable-list {
+            max-height: 320px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
+            gap: 8px;
+            padding-left: 5px;
+        }
+
+        .scrollable-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            padding: 12px 15px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
             cursor: pointer;
-            user-select: none;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-
-        .box .num {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .box.active {
-            background-color: var(--primary);
-            border-color: var(--primary-dark);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .box.active .num {
-            color: white;
-        }
-
-        .box .check-icon {
-            font-size: 0.75rem;
-            margin-top: 2px;
-            opacity: 0;
-            transform: scale(0.5);
             transition: all 0.2s ease;
         }
 
-        .box.active .check-icon {
-            opacity: 1;
-            transform: scale(1);
+        .list-item:hover {
+            border-color: var(--secondary);
         }
 
-        /* Actions Footer */
+        .list-item.active {
+            background-color: #ecfdf5;
+            border-color: var(--primary);
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .list-item.active .item-checkbox {
+            background: var(--primary);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .item-amount {
+            font-weight: 700;
+            color: var(--text-muted);
+            direction: ltr;
+            font-size: 0.95rem;
+        }
+
+        .list-item.active .item-amount {
+            color: var(--primary-dark);
+        }
+
         .actions-footer {
             display: flex;
             gap: 10px;
@@ -265,38 +260,24 @@
             border: 1px solid var(--border-color);
             color: var(--text-muted);
         }
-
-        .btn-outline:hover {
-            background: var(--border-color);
-        }
+        .btn-outline:hover { background: var(--border-color); }
 
         .btn-danger {
             background-color: #fef2f2;
             color: var(--danger);
         }
-
-        .btn-danger:hover {
-            background-color: #fee2e2;
-        }
-
-        @media (max-width: 480px) {
-            .grid-boxes {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
+        .btn-danger:hover { background-color: #fee2e2; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
-    <!-- العنوان العلوي -->
     <header>
-        <h1>لوحة متابعة الادخار</h1>
+        <h1>لوحة الادخار الذكية</h1>
         <div style="font-size: 0.85rem; color: var(--text-muted);" id="currentDate"></div>
     </header>
 
-    <!-- لوحة المؤشرات -->
     <div class="card">
         <div class="summary-grid">
             <div class="summary-box available">
@@ -315,7 +296,6 @@
             </div>
         </div>
 
-        <!-- شريط التقدم -->
         <div class="progress-container">
             <div class="progress-info">
                 <span>نسبة الإنجاز</span>
@@ -326,29 +306,27 @@
             </div>
         </div>
 
-        <!-- إعدادات مخصصة -->
         <div class="settings-row">
             <div class="input-group">
-                <label for="boxValueInput">قيمة المربع/الشهري (ر.س)</label>
+                <label for="boxValueInput">قيمة الدفعة الواحدة (ر.س)</label>
                 <input type="number" id="boxValueInput" value="5000" onchange="saveData()">
             </div>
             <div class="input-group">
-                <label for="totalBoxesInput">إعدد المربعات الكلي</label>
-                <input type="number" id="totalBoxesInput" value="20" onchange="updateTotalBoxes()">
+                <label for="totalBoxesInput">عدد الدفعات / الشهور الكلي</label>
+                <input type="number" id="totalBoxesInput" value="50" onchange="updateTotalBoxes()">
             </div>
         </div>
     </div>
 
-    <!-- شبكة المربعات التفصيلية -->
+    <!-- قائمة الدفعات ذات التمرير النظيف والمريح -->
     <div class="card">
         <div class="section-header">
-            <h3>الدفعات أو الشهور (اضغط للتفعيل)</h3>
-            <span style="font-size: 0.85rem; color: var(--text-muted);" id="activeCountText">0 من 20 مكتمل</span>
+            <h3>قائمة الدفعات (انقر لتأكيد السداد)</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="activeCountText">0 من 50 مكتمل</span>
         </div>
-        <div class="grid-boxes" id="gridContainer"></div>
+        <div class="scrollable-list" id="gridContainer"></div>
     </div>
 
-    <!-- أزرار التحكم -->
     <div class="actions-footer">
         <button class="btn btn-outline" onclick="selectAllBoxes()">تحديد الكل</button>
         <button class="btn btn-danger" onclick="resetData()">إعادة ضبط</button>
@@ -357,18 +335,15 @@
 </div>
 
 <script>
-    // تهيئة البيانات
     let targetGoal = Number(localStorage.getItem('pro_targetGoal')) || 500000;
     let boxValue = Number(localStorage.getItem('pro_boxValue')) || 5000;
-    let totalBoxes = Number(localStorage.getItem('pro_totalBoxes')) || 20;
+    let totalBoxes = Number(localStorage.getItem('pro_totalBoxes')) || 50;
     let boxesState = JSON.parse(localStorage.getItem('pro_boxesState')) || Array(totalBoxes).fill(false);
 
-    // ربط المدخلات بالقيم المحفوظة
     document.getElementById('targetInput').value = targetGoal;
     document.getElementById('boxValueInput').value = boxValue;
     document.getElementById('totalBoxesInput').value = totalBoxes;
 
-    // عرض تاريخ اليوم بتنسيق عربي جميل
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-SA', options);
 
@@ -377,21 +352,24 @@
         container.innerHTML = '';
 
         for (let i = 0; i < totalBoxes; i++) {
-            const box = document.createElement('div');
-            box.className = `box ${boxesState[i] ? 'active' : ''}`;
+            const item = document.createElement('div');
+            item.className = `list-item ${boxesState[i] ? 'active' : ''}`;
             
-            box.innerHTML = `
-                <span class="num">${i + 1}</span>
-                <span class="check-icon">✔</span>
+            item.innerHTML = `
+                <div class="item-info">
+                    <div class="item-checkbox">${boxesState[i] ? '✓' : ''}</div>
+                    <span class="item-title">الدفعة رقم ${i + 1}</span>
+                </div>
+                <span class="item-amount">+${boxValue.toLocaleString()} ر.س</span>
             `;
 
-            box.onclick = () => {
+            item.onclick = () => {
                 boxesState[i] = !boxesState[i];
-                box.classList.toggle('active');
                 saveData();
+                initGrid();
             };
 
-            container.appendChild(box);
+            container.appendChild(item);
         }
         calculate();
     }
@@ -405,7 +383,6 @@
         const remaining = Math.max(0, targetGoal - totalSaved);
         const percentage = targetGoal > 0 ? Math.min(100, Math.round((totalSaved / targetGoal) * 100)) : 0;
 
-        // تحديث الواجهة
         document.getElementById('totalSavedDisplay').innerText = totalSaved.toLocaleString() + ' ر.س';
         document.getElementById('remainingDisplay').innerText = remaining.toLocaleString() + ' ر.س';
         document.getElementById('progressPercentage').innerText = percentage + '%';
@@ -427,12 +404,12 @@
 
     function updateTotalBoxes() {
         const newTotal = Number(document.getElementById('totalBoxesInput').value);
-        if (newTotal > 0 && newTotal <= 200) {
+        if (newTotal > 0 && newTotal <= 500) {
             totalBoxes = newTotal;
             if (boxesState.length < totalBoxes) {
                 boxesState = boxesState.concat(Array(totalBoxes - boxesState.length).fill(false));
             } else {
-                boxesState = boxesState.slice(0, totalBoxes);
+                boxesState.slice(0, totalBoxes);
             }
             saveData();
             initGrid();
@@ -440,7 +417,7 @@
     }
 
     function selectAllBoxes() {
-        if (confirm('هل تريد تحديد جميع المربعات كمكتملة؟')) {
+        if (confirm('هل تريد تحديد جميع الدفعات كمكتملة؟')) {
             boxesState = Array(totalBoxes).fill(true);
             saveData();
             initGrid();
@@ -454,7 +431,6 @@
         }
     }
 
-    // التشغيل الأول
     initGrid();
 </script>
 
