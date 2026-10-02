@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الادخار الذكية والمرنة</title>
+    <title>لوحة الادخار والاستثمار الذكية</title>
     <style>
         :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --secondary: #3b82f6;
-            --bg-main: #f8fafc;
+            --primary: #059669;
+            --primary-light: #10b981;
+            --primary-bg: #ecfdf5;
+            --accent: #3b82f6;
+            --bg-main: #f1f5f9;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --danger: #ef4444;
-            --border-color: #e2e8f0;
+            --danger-bg: #fef2f2;
+            --border: #e2e8f0;
+            --radius: 16px;
         }
 
         * {
@@ -34,404 +37,407 @@
 
         .app-container {
             width: 100%;
-            max-width: 650px;
+            max-width: 700px;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
+        /* رأس الصفحة */
         header {
+            background: var(--card-bg);
+            padding: 20px 24px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
         }
 
         header h1 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
         }
 
+        .date-badge {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: var(--bg-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* البطاقات العامة */
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
         }
 
-        .summary-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .summary-box {
-            padding: 15px;
-            border-radius: 12px;
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .summary-box.available { background-color: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
-        .summary-box.target { background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
-        .summary-box.remaining { background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        /* شبكة الملخص المالي */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-        .summary-box .title { font-size: 0.95rem; font-weight: 600; }
-        .summary-box .value { font-size: 1.25rem; font-weight: 700; direction: ltr; }
+        @media (max-width: 600px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric-card {
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .metric-card.saved { background: var(--primary-bg); border: 1px solid #a7f3d0; color: #065f46; }
+        .metric-card.target { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+        .metric-card.remaining { background: var(--danger-bg); border: 1px solid #fecaca; color: #991b1b; }
+
+        .metric-title { font-size: 0.85rem; font-weight: 600; opacity: 0.9; }
+        .metric-value { font-size: 1.25rem; font-weight: 800; direction: ltr; text-align: right; }
         
-        .summary-box input {
+        .metric-value input {
             font-size: 1.25rem;
-            font-weight: 700;
+            font-weight: 800;
             border: none;
             background: transparent;
-            text-align: left;
-            width: 150px;
+            text-align: right;
+            width: 100%;
             color: inherit;
             outline: none;
             border-bottom: 1px dashed currentColor;
         }
 
-        .progress-container {
-            margin-top: 15px;
+        /* شريط التقدم */
+        .progress-section {
+            margin-top: 10px;
         }
 
         .progress-info {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
             font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
         }
 
-        .progress-bar-bg {
-            background-color: #e2e8f0;
+        .progress-track {
+            background: var(--bg-main);
+            height: 12px;
             border-radius: 999px;
-            height: 10px;
             overflow: hidden;
         }
 
-        .progress-bar-fill {
-            background: linear-gradient(90deg, var(--secondary), var(--primary));
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent), var(--primary-light));
             height: 100%;
             width: 0%;
-            transition: width 0.4s ease;
             border-radius: 999px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .settings-row {
+        /* نموذج إضافة إيداع جديد */
+        .deposit-form {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr auto;
             gap: 10px;
             margin-top: 15px;
         }
 
-        .input-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-            font-weight: 600;
+        @media (max-width: 600px) {
+            .deposit-form {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+        .form-control {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             font-size: 0.95rem;
             outline: none;
             background: var(--bg-main);
+            color: var(--text-main);
         }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
+        .form-control:focus {
+            border-color: var(--accent);
+            background: white;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 15px;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .section-header h3 {
-            font-size: 1.05rem;
-        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #047857; }
+        
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-outline:hover { background: var(--border); color: var(--text-main); }
 
-        /* حل مشكلة التكدس: قائمة ذات تمرير داخلي أنيق ومنظم */
-        .scrollable-list {
-            max-height: 320px;
+        .btn-danger { background: var(--danger-bg); color: var(--danger); }
+        .btn-danger:hover { background: #fee2e2; }
+
+        /* سجل المعاملات (Scrollable) */
+        .transactions-list {
+            max-height: 280px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            padding-left: 5px;
+            padding-left: 4px;
         }
 
-        .scrollable-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        .scrollable-list::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
+        .transactions-list::-webkit-scrollbar { width: 5px; }
+        .transactions-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-        .list-item {
+        .transaction-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
+            padding: 12px 16px;
             background: var(--bg-main);
-            border: 1px solid var(--border-color);
             border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border: 1px solid var(--border);
         }
 
-        .list-item:hover {
-            border-color: var(--secondary);
-        }
-
-        .list-item.active {
-            background-color: #ecfdf5;
-            border-color: var(--primary);
-        }
-
-        .item-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .item-checkbox {
-            width: 22px;
-            height: 22px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            transition: all 0.2s;
-        }
-
-        .list-item.active .item-checkbox {
-            background: var(--primary);
-            border-color: var(--primary-dark);
-            color: white;
-        }
-
-        .item-title {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .item-amount {
-            font-weight: 700;
-            color: var(--text-muted);
-            direction: ltr;
-            font-size: 0.95rem;
-        }
-
-        .list-item.active .item-amount {
-            color: var(--primary-dark);
-        }
-
-        .actions-footer {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
+        .tx-info { display: flex; flex-direction: column; gap: 2px; }
+        .tx-title { font-weight: 700; font-size: 0.95rem; }
+        .tx-date { font-size: 0.75rem; color: var(--text-muted); }
+        
+        .tx-right { display: flex; align-items: center; gap: 15px; }
+        .tx-amount { font-weight: 800; color: var(--primary); direction: ltr; }
+        
+        .delete-btn {
+            background: none;
             border: none;
-            border-radius: 10px;
-            font-weight: 600;
+            color: var(--danger);
             cursor: pointer;
-            transition: background 0.2s;
+            font-size: 1rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .delete-btn:hover { opacity: 1; }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
+        /* شريط أسفل الأزرار */
+        .footer-actions {
+            display: flex;
+            gap: 10px;
         }
-        .btn-outline:hover { background: var(--border-color); }
-
-        .btn-danger {
-            background-color: #fef2f2;
-            color: var(--danger);
-        }
-        .btn-danger:hover { background-color: #fee2e2; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     
+    <!-- الرأس -->
     <header>
-        <h1>لوحة الادخار الذكية</h1>
-        <div style="font-size: 0.85rem; color: var(--text-muted);" id="currentDate"></div>
+        <h1>لوحة الادخار والهدف المالي</h1>
+        <div class="date-badge" id="currentDate"></div>
     </header>
 
+    <!-- الملخص والمؤشرات -->
     <div class="card">
-        <div class="summary-grid">
-            <div class="summary-box available">
-                <span class="title">المبلغ المتوفر</span>
-                <span class="value" id="totalSavedDisplay">0 ر.س</span>
+        <div class="metrics-grid">
+            <div class="metric-card saved">
+                <span class="metric-title">المبلغ المتوفر</span>
+                <span class="metric-value" id="totalSavedDisplay">0 ر.س</span>
             </div>
-            
-            <div class="summary-box target">
-                <span class="title">الهدف الكلي</span>
-                <input type="number" id="targetInput" value="500000" onchange="saveData()">
+            <div class="metric-card target">
+                <span class="metric-title">الهدف الكلي</span>
+                <span class="metric-value">
+                    <input type="number" id="targetInput" value="500000" onchange="updateTarget()">
+                </span>
             </div>
-            
-            <div class="summary-box remaining">
-                <span class="title">باقي عن الهدف</span>
-                <span class="value" id="remainingDisplay">500,000 ر.س</span>
+            <div class="metric-card remaining">
+                <span class="metric-title">باقي عن الهدف</span>
+                <span class="metric-value" id="remainingDisplay">500,000 ر.س</span>
             </div>
         </div>
 
-        <div class="progress-container">
+        <!-- شريط التقدم المئوي -->
+        <div class="progress-section">
             <div class="progress-info">
-                <span>نسبة الإنجاز</span>
-                <span id="progressPercentage">0%</span>
+                <span>نسبة الإنجاز نحو الهدف</span>
+                <span id="progressText">0%</span>
             </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progressBarFill"></div>
-            </div>
-        </div>
-
-        <div class="settings-row">
-            <div class="input-group">
-                <label for="boxValueInput">قيمة الدفعة الواحدة (ر.س)</label>
-                <input type="number" id="boxValueInput" value="5000" onchange="saveData()">
-            </div>
-            <div class="input-group">
-                <label for="totalBoxesInput">عدد الدفعات / الشهور الكلي</label>
-                <input type="number" id="totalBoxesInput" value="50" onchange="updateTotalBoxes()">
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
     </div>
 
-    <!-- قائمة الدفعات ذات التمرير النظيف والمريح -->
+    <!-- إضافة ادخار جديد مخصص -->
     <div class="card">
-        <div class="section-header">
-            <h3>قائمة الدفعات (انقر لتأكيد السداد)</h3>
-            <span style="font-size: 0.85rem; color: var(--text-muted);" id="activeCountText">0 من 50 مكتمل</span>
-        </div>
-        <div class="scrollable-list" id="gridContainer"></div>
+        <div class="card-title">إضافة مبلغ ادخار أو دفعة جديدة</div>
+        <form class="deposit-form" onsubmit="addTransaction(event)">
+            <input type="text" id="txTitleInput" class="form-control" placeholder="وصف الدفعة (مثال: ادخار شهر أكتوبر)" required>
+            <input type="number" id="txAmountInput" class="form-control" placeholder="المبلغ (ر.س)" required min="1">
+            <button type="submit" class="btn btn-primary">إضافة</button>
+        </form>
     </div>
 
-    <div class="actions-footer">
-        <button class="btn btn-outline" onclick="selectAllBoxes()">تحديد الكل</button>
-        <button class="btn btn-danger" onclick="resetData()">إعادة ضبط</button>
+    <!-- سجل المدخرات -->
+    <div class="card">
+        <div class="card-title">
+            <span>سجل المدخرات والدفعات</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="txCountText">0 عمليات</span>
+        </div>
+        <div class="transactions-list" id="transactionsContainer">
+            <!-- يتم تعبئتها ديناميكياً -->
+        </div>
+    </div>
+
+    <!-- أزرار التحكم والنسخ الاحتياطي -->
+    <div class="footer-actions">
+        <button class="btn btn-outline" style="flex:1;" onclick="exportData()">تصدير نسخة احتياطية</button>
+        <button class="btn btn-danger" onclick="resetAllData()">إعادة ضبط الكل</button>
     </div>
 
 </div>
 
 <script>
-    let targetGoal = Number(localStorage.getItem('pro_targetGoal')) || 500000;
-    let boxValue = Number(localStorage.getItem('pro_boxValue')) || 5000;
-    let totalBoxes = Number(localStorage.getItem('pro_totalBoxes')) || 50;
-    let boxesState = JSON.parse(localStorage.getItem('pro_boxesState')) || Array(totalBoxes).fill(false);
+    // الحالة والتخزين المحلي
+    let targetGoal = Number(localStorage.getItem('pro_v2_target')) || 500000;
+    let transactions = JSON.parse(localStorage.getItem('pro_v2_txs')) || [];
 
     document.getElementById('targetInput').value = targetGoal;
-    document.getElementById('boxValueInput').value = boxValue;
-    document.getElementById('totalBoxesInput').value = totalBoxes;
 
+    // عرض التاريخ
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-SA', options);
 
-    function initGrid() {
-        const container = document.getElementById('gridContainer');
-        container.innerHTML = '';
-
-        for (let i = 0; i < totalBoxes; i++) {
-            const item = document.createElement('div');
-            item.className = `list-item ${boxesState[i] ? 'active' : ''}`;
-            
-            item.innerHTML = `
-                <div class="item-info">
-                    <div class="item-checkbox">${boxesState[i] ? '✓' : ''}</div>
-                    <span class="item-title">الدفعة رقم ${i + 1}</span>
-                </div>
-                <span class="item-amount">+${boxValue.toLocaleString()} ر.س</span>
-            `;
-
-            item.onclick = () => {
-                boxesState[i] = !boxesState[i];
-                saveData();
-                initGrid();
-            };
-
-            container.appendChild(item);
-        }
-        calculate();
+    function updateTarget() {
+        targetGoal = Number(document.getElementById('targetInput').value) || 0;
+        localStorage.setItem('pro_v2_target', targetGoal);
+        renderApp();
     }
 
-    function calculate() {
-        targetGoal = Number(document.getElementById('targetInput').value) || 0;
-        boxValue = Number(document.getElementById('boxValueInput').value) || 0;
+    function addTransaction(e) {
+        e.preventDefault();
+        const titleInput = document.getElementById('txTitleInput');
+        const amountInput = document.getElementById('txAmountInput');
 
-        const activeCount = boxesState.filter(Boolean).length;
-        const totalSaved = activeCount * boxValue;
+        const newTx = {
+            id: Date.now(),
+            title: titleInput.value.trim(),
+            amount: Number(amountInput.value),
+            date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' })
+        };
+
+        transactions.unshift.call(transactions, newTx);
+        saveAndRender();
+
+        titleInput.value = '';
+        amountInput.value = '';
+    }
+
+    function deleteTransaction(id) {
+        transactions = transactions.filter(tx => tx.id !== id);
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('pro_v2_txs', JSON.stringify(transactions));
+        renderApp();
+    }
+
+    function renderApp() {
+        const container = document.getElementById('transactionsContainer');
+        container.innerHTML = '';
+
+        let totalSaved = 0;
+
+        if (transactions.length === 0) {
+            container.innerHTML = `<div class="empty-state">لا توجد مدخرات مسجلة حتى الآن. ابدأ بإضافة أول دفعة بالأعلى!</div>`;
+        } else {
+            transactions.forEach(tx => {
+                totalSaved += tx.amount;
+                const item = document.createElement('div');
+                item.className = 'transaction-item';
+                item.innerHTML = `
+                    <div class="tx-info">
+                        <span class="tx-title">${tx.title}</span>
+                        <span class="tx-date">${tx.date}</span>
+                    </div>
+                    <div class="tx-right">
+                        <span class="tx-amount">+${tx.amount.toLocaleString()} ر.س</span>
+                        <button class="delete-btn" onclick="deleteTransaction(${tx.id})" title="حذف">✕</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
         const remaining = Math.max(0, targetGoal - totalSaved);
         const percentage = targetGoal > 0 ? Math.min(100, Math.round((totalSaved / targetGoal) * 100)) : 0;
 
+        // تحديث الواجهة
         document.getElementById('totalSavedDisplay').innerText = totalSaved.toLocaleString() + ' ر.س';
         document.getElementById('remainingDisplay').innerText = remaining.toLocaleString() + ' ر.س';
-        document.getElementById('progressPercentage').innerText = percentage + '%';
-        document.getElementById('progressBarFill').style.width = percentage + '%';
-        document.getElementById('activeCountText').innerText = `${activeCount} من ${totalBoxes} مكتمل`;
+        document.getElementById('progressText').innerText = percentage + '%';
+        document.getElementById('progressFill').style.width = percentage + '%';
+        document.getElementById('txCountText').innerText = `${transactions.length} عملية`;
     }
 
-    function saveData() {
-        targetGoal = Number(document.getElementById('targetInput').value);
-        boxValue = Number(document.getElementById('boxValueInput').value);
-
-        localStorage.setItem('pro_targetGoal', targetGoal);
-        localStorage.setItem('pro_boxValue', boxValue);
-        localStorage.setItem('pro_totalBoxes', totalBoxes);
-        localStorage.setItem('pro_boxesState', JSON.stringify(boxesState));
-
-        calculate();
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ target: targetGoal, transactions }));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "savings_backup.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
     }
 
-    function updateTotalBoxes() {
-        const newTotal = Number(document.getElementById('totalBoxesInput').value);
-        if (newTotal > 0 && newTotal <= 500) {
-            totalBoxes = newTotal;
-            if (boxesState.length < totalBoxes) {
-                boxesState = boxesState.concat(Array(totalBoxes - boxesState.length).fill(false));
-            } else {
-                boxesState.slice(0, totalBoxes);
-            }
-            saveData();
-            initGrid();
-        }
-    }
-
-    function selectAllBoxes() {
-        if (confirm('هل تريد تحديد جميع الدفعات كمكتملة؟')) {
-            boxesState = Array(totalBoxes).fill(true);
-            saveData();
-            initGrid();
-        }
-    }
-
-    function resetData() {
-        if (confirm('هل أنت متأكد من تصفير كافة البيانات وإعادة الضبط؟')) {
+    function resetAllData() {
+        if (confirm('هل أنت متأكد من مسح جميع البيانات وإعادة التعيين بالكامل؟')) {
             localStorage.clear();
             location.reload();
         }
     }
 
-    initGrid();
+    // التشغيل الأولي
+    renderApp();
 </script>
 
 </body>
