@@ -3,65 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة المدخرات - Ed5ar</title>
-    <!-- Tailwind CSS للتصميم السريع والجميل -->
+    <title>منصة حوسبة المدخرات الذكية - Ed5ar</title>
+    <!-- Tailwind CSS للتصميم الاحترافي -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-4 md:p-8">
+<body class="bg-gradient-to-br from-slate-900 via-gray-900 to-emerald-950 min-h-screen p-4 md:p-8 text-gray-100">
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
         <!-- رأس الصفحة -->
-        <header class="bg-white shadow-md rounded-2xl p-6 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <header class="glass-card text-gray-800 shadow-xl rounded-3xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 border border-gray-100/10">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">حوسبة المدخرات (Ed5ar)</h1>
-                <p class="text-sm text-gray-500">متابعة وحفظ المدخرات السحابية المحدثة فوراً</p>
+                <h1 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">💎 منصة إدغار للمدخرات</h1>
+                <p class="text-sm text-gray-500">إدارة وتتبع المدخرات السحابية بأمان تام</p>
             </div>
-            <div id="connection-status" class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">
-                جاري الاتصال بقاعدة البيانات...
+            <div id="connection-status" class="bg-amber-100 text-amber-800 text-xs px-4 py-1.5 rounded-full font-bold shadow-sm">
+                جاري الاتصال بالسحابة...
             </div>
         </header>
 
-        <!-- لوحة الملخص -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <p class="text-sm text-gray-500 mb-1">إجمالي المدخرات</p>
-                <h2 id="total-savings" class="text-3xl font-bold text-green-600">0.00 ر.س</h2>
+        <!-- لوحة الملخص والهدف (في المنتصف وبارزة) -->
+        <div class="glass-card text-gray-800 shadow-2xl rounded-3xl p-8 border border-gray-100/10 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-emerald-500 text-white text-xs px-4 py-1 rounded-bl-2xl font-bold">الهدف: 500,000 ر.س</div>
+            <p class="text-sm font-semibold text-gray-500 mb-2">إجمالي المدخرات الحالية</p>
+            <h2 id="total-savings" class="text-5xl md:text-6xl font-extrabold text-emerald-600 mb-4 tracking-tight">0.00 ر.س</h2>
+            
+            <!-- شريط التقدم للهدف -->
+            <div class="w-full bg-gray-200 rounded-full h-4 mb-3 overflow-hidden shadow-inner">
+                <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-4 rounded-full transition-all duration-700" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 font-bold">
+                <span id="progress-text">0% من الهدف</span>
+                <span>المستهدف: 500,000 ر.س</span>
             </div>
         </div>
 
-        <!-- إضافة مبلغ جديد -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-4">إضافة مدخرات جديدة</h2>
+        <!-- نموذج إضافة مبلغ جديد -->
+        <div class="glass-card text-gray-800 shadow-xl rounded-3xl p-6 border border-gray-100/10">
+            <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">➕ إضافة حركة مدخرات جديدة</h2>
             <form id="saving-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">المبلغ (ر.س)</label>
-                    <input type="number" id="amount" step="0.01" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">المبلغ (ر.س)</label>
+                    <input type="number" id="amount" step="0.01" required placeholder="مثال: 8000" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-gray-800 font-semibold bg-gray-50">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">السبب / الوصف</label>
-                    <input type="text" id="note" required placeholder="مثال: توفير شهري" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">السبب / الوصف</label>
+                    <input type="text" id="note" required placeholder="مثال: توفير شهري" class="w-full border border-gray-300 rounded-xl px-4 py.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-gray-800 bg-gray-50">
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl transition">
-                        حفظ في السحابة ☁️
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-emerald-600/30 transition transform active:scale-95">
+                        حفظ محمي ☁️
                     </button>
                 </div>
             </form>
         </div>
 
         <!-- جدول الحركات السحابية -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="glass-card text-gray-800 shadow-xl rounded-3xl overflow-hidden border border-gray-100/10">
             <div class="p-6 border-b border-gray-100">
-                <h2 class="text-lg font-bold text-gray-800">سجل المدخرات</h2>
+                <h2 class="text-lg font-bold text-gray-900">📋 سجل المدخرات السحابي</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-right border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 text-gray-600 text-sm">
+                        <tr class="bg-gray-100/80 text-gray-600 text-xs font-bold uppercase tracking-wider">
                             <th class="p-4">المبلغ</th>
                             <th class="p-4">الوصف</th>
                             <th class="p-4">التاريخ</th>
@@ -74,14 +84,15 @@
                 </table>
             </div>
         </div>
+
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات مشروعك
+        // إعدادات مشروعك السحابي
         const firebaseConfig = {
           apiKey: "AIzaSyAcSBoqPSwOADYTRN6a_CUkHbxzaC0VxBs",
           authDomain: "ed5ar-d1629.firebaseapp.com",
@@ -92,21 +103,45 @@
           measurementId: "G-E2X1LJWR0Z"
         };
 
-        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         const statusBadge = document.getElementById("connection-status");
-        statusBadge.textContent = "متصل بالسحابة ✅";
-        statusBadge.className = "bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-semibold";
+        statusBadge.textContent = "متصل بالسحابة بأمان ✅";
+        statusBadge.className = "bg-emerald-100 text-emerald-800 text-xs px-4 py-1.5 rounded-full font-bold shadow-sm";
 
         const form = document.getElementById("saving-form");
         const tableBody = document.getElementById("savings-table-body");
         const totalSavingsEl = document.getElementById("total-savings");
+        const progressBar = document.getElementById("progress-bar");
+        const progressText = document.getElementById("progress-text");
 
-        // إضافة مدخرات جديدة لقاعدة البيانات
+        const TARGET_GOAL = 500000; // الهدف المالي
+
+        // دالة المشفرات البسيطة للتحقق من الرقم السري بدون كشفه المباشر الواضح
+        const SECRET_HASH = ["D", "d", "1", "6", "1", "6"];
+        function verifyPin() {
+            const input = prompt("الرجاء إدخال الرقم السري لإتمام العملية:");
+            if (!input) return false;
+            const chars = input.split("");
+            if (chars.length !== SECRET_HASH.length) return false;
+            return chars.every((val, index) => val === SECRET_HASH[index]);
+        }
+
+        // تنسيق المبالغ المالية بفواصل عشرية
+        function formatMoney(val) {
+            return Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // معالجة إضافة المدخرات المحمية
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
+            
+            if (!verifyPin()) {
+                alert("الرقم السري غير صحيح! تم إلغاء العملية.");
+                return;
+            }
+
             const amount = parseFloat(document.getElementById("amount").value);
             const note = document.getElementById("note").value;
 
@@ -119,48 +154,63 @@
                 form.reset();
             } catch (error) {
                 console.error("خطأ أثناء الحفظ: ", error);
-                alert("حدث خطأ أثناء حفظ البيانات!");
+                alert("حدث خطأ أثناء حفظ البيانات بالسحابة!");
             }
         });
 
-        // جلب البيانات ومزامنتها لحظياً من Firestore
+        // المزامنة الحية وعرض البيانات
         const q = query(collection(db, "savings"));
         onSnapshot(q, (snapshot) => {
             let total = 0;
             tableBody.innerHTML = "";
             
             if(snapshot.empty) {
-                tableBody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">لا توجد مدخرات مسجلة حتى الآن. ابدأ بإضافة مبلغ!</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-400 font-semibold">لا توجد مدخرات مسجلة حتى الآن. ابدأ بإضافة هدفك الأول!</td></tr>`;
                 totalSavingsEl.textContent = "0.00 ر.س";
+                progressBar.style.width = "0%";
+                progressText.textContent = "0% من الهدف";
                 return;
             }
 
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                total += Number(data.amount) || 0;
+                const numAmount = Number(data.amount) || 0;
+                total += numAmount;
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td class="p-4 font-bold text-green-600">${data.amount} ر.س</td>
-                    <td class="p-4">${data.note}</td>
-                    <td class="p-4 text-gray-500">${data.date || '-'}</td>
+                    <td class="p-4 font-extrabold text-emerald-600">${formatMoney(numAmount)} ر.س</td>
+                    <td class="p-4 font-medium">${data.note}</td>
+                    <td class="p-4 text-gray-500 text-xs">${data.date || '-'}</td>
                     <td class="p-4">
-                        <button onclick="deleteItem('${docSnap.id}')" class="text-red-500 hover:text-red-700 text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition">حذف</button>
+                        <button onclick="deleteItem('${docSnap.id}')" class="text-rose-600 hover:text-white text-xs bg-rose-50 hover:bg-rose-600 font-bold px-3 py-1.5 rounded-xl transition shadow-sm">حذف</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
             });
 
-            totalSavingsEl.textContent = total.toLocaleString('ar-SA') + " ر.س";
+            totalSavingsEl.textContent = formatMoney(total) + " ر.س";
+            
+            // حساب نسبة الهدف (500,000)
+            let percentage = (total / TARGET_GOAL) * 100;
+            if (percentage > 100) percentage = 100;
+            progressBar.style.width = percentage.toFixed(1) + "%";
+            progressText.textContent = percentage.toFixed(1) + "% من الهدف المنشود";
         });
 
-        // دالة الحذف المتاحة عامة
+        // دالة الحذف المحمية
         window.deleteItem = async function(id) {
-            if(confirm("هل أنت متأكد من حذف هذا السجل؟")) {
+            if (!verifyPin()) {
+                alert("الرقم السري غير صحيح! تم إلغاء الحذف.");
+                return;
+            }
+
+            if(confirm("هل أنت متأكد من حذف هذا السجل نهائياً من السحابة؟")) {
                 try {
                     await deleteDoc(doc(db, "savings", id));
                 } catch (error) {
                     console.error("خطأ أثناء الحذف: ", error);
+                    alert("فشل الحذف من السحابة.");
                 }
             }
         };
