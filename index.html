@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
-        .collapse-transition { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-16 text-slate-800">
@@ -48,9 +47,21 @@
             <div class="w-full bg-slate-100 rounded-full h-3 mb-2.5 overflow-hidden p-0.5">
                 <div id="progress-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
             </div>
-            <div class="flex justify-between text-xs text-slate-400 font-bold px-1">
+            <div class="flex justify-between text-xs text-slate-400 font-bold px-1 mb-4">
                 <span id="progress-text">0% من الهدف</span>
                 <span id="remaining-text">المتبقي: 500,000 ر.س</span>
+            </div>
+
+            <!-- مؤشر التوقع والزمن المستهدف (جديد) -->
+            <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-100 flex items-center justify-between text-xs">
+                <div class="text-right">
+                    <span class="text-slate-400 block font-semibold">متوسط التوفير الشهري:</span>
+                    <span id="avg-monthly" class="font-bold text-slate-700">0.00 ر.س</span>
+                </div>
+                <div class="text-left border-r border-slate-200 pr-4">
+                    <span class="text-slate-400 block font-semibold">الوقت المتوقع لتحقيق الهدف (يوم 27):</span>
+                    <span id="target-eta" class="font-bold text-emerald-600">--</span>
+                </div>
             </div>
         </div>
 
@@ -148,11 +159,12 @@
         const remainingText = document.getElementById("remaining-text");
         const submitBtn = document.getElementById("submit-btn");
         const itemsCount = document.getElementById("items-count");
+        const avgMonthlyEl = document.getElementById("avg-monthly");
+        const targetEtaEl = document.getElementById("target-eta");
 
         const TARGET_GOAL = 500000;
         const SECRET_HASH = ["D", "d", "1", "6", "1", "6"];
 
-        // دالة طي وإظهار النموذج
         window.toggleForm = function() {
             if (formContainer.classList.contains("hidden")) {
                 formContainer.classList.remove("hidden");
@@ -207,7 +219,7 @@
                     date: new Date().toLocaleDateString('ar-SA')
                 });
                 form.reset();
-                formContainer.classList.add("hidden"); // طي النموذج تلقائياً بعد الحفظ
+                formContainer.classList.add("hidden");
             } catch (error) {
                 console.error("خطأ:", error);
                 alert("حدث خطأ أثناء الحفظ!");
@@ -221,6 +233,7 @@
         
         onSnapshot(q, (snapshot) => {
             let total = 0;
+            let depositsCount = 0;
             tableBody.innerHTML = "";
             itemsCount.textContent = `${snapshot.size} حركة`;
             
@@ -230,13 +243,18 @@
                 progressBar.style.width = "0%";
                 progressText.textContent = "0% من الهدف";
                 remainingText.textContent = `المتبقي: ${formatMoney(TARGET_GOAL)} ر.س`;
+                avgMonthlyEl.textContent = "0.00 ر.س";
+                targetEtaEl.textContent = "--";
                 return;
             }
 
+            const docs = [];
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
+                docs.push({ id: docSnap.id, ...data });
                 const numAmount = Number(data.amount) || 0;
                 total += numAmount;
+                if(numAmount > 0) depositsCount++;
 
                 const isWithdraw = data.type === 'withdraw' || numAmount < 0;
                 const badgeClass = isWithdraw ? "bg-rose-50 text-rose-600 border-rose-200" : "bg-emerald-50 text-emerald-600 border-emerald-200";
@@ -270,6 +288,24 @@
             progressBar.style.width = percentage.toFixed(1) + "%";
             progressText.textContent = percentage.toFixed(1) + "% من الهدف";
             remainingText.textContent = `المتبقي: ${formatMoney(remaining)} ر.س`;
+
+            // حساب التوقع الشهري بناء على الحركات وتاريخ 27
+            let avgMonthly = depositsCount > 0 ? (total / Math.max(depositsCount, 1)) : 0;
+            avgMonthlyEl.textContent = formatMoney(avgMonthly) + " ر.س";
+
+            if (avgMonthly > 0 && remaining > 0) {
+                let monthsNeeded = Math.ceil(remaining / avgMonthly);
+                let targetDate = new Date();
+                targetDate.setMonth(targetDate.getMonth() + monthsNeeded);
+                targetDate.setDate(27); // ضبط التاريخ على يوم 27 من الشهر المتوقع
+                
+                targetEtaEl.textContent = targetDate.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+            } else if (remaining <= 0) {
+                targetEtaEl.textContent = "تم تحقيق الهدف! 🎉";
+            } else {
+                targetEtaEl.textContent = "غير متوفر";
+            }
+
         }, (error) => {
             console.error("خطأ في الاتصال بقاعدة البيانات:", error);
             tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-rose-500 text-xs">تعذر جلب البيانات من السحابة، يرجى التأكد من الاتصال.</td></tr>`;
