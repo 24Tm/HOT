@@ -11,19 +11,19 @@
         body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-950 min-h-screen pb-16 text-slate-100">
+<body class="bg-slate-950 min-h-screen pb-20 text-slate-100">
 
-    <div class="max-w-xl mx-auto p-4 sm:p-6 space-y-6">
+    <div class="max-w-xl mx-auto p-4 sm:p-6 space-y-5">
         
         <!-- رأس الصفحة -->
-        <header class="bg-slate-900 shadow-sm rounded-2xl p-4 sm:p-5 flex justify-between items-center border border-slate-800">
+        <header class="bg-slate-900 shadow-sm rounded-2xl p-4 flex justify-between items-center border border-slate-800">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold border border-emerald-500/20">
-                    💎
+                    
                 </div>
                 <div>
-                    <h1 class="text-base font-extrabold text-white">الادخار الشهري</h1>
-                    <p class="text-xs text-slate-400">إدارة وتتبع المدخرات السحابية</p>
+                    <h1 class="text-sm font-extrabold text-white">الادخار الشهري</h1>
+                    <p class="text-[11px] text-slate-400">إدارة وتتبع المدخرات السحابية</p>
                 </div>
             </div>
             <div id="connection-status" class="bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-bold border border-emerald-500/20 flex items-center gap-1.5">
@@ -33,14 +33,14 @@
         </header>
 
         <!-- لوحة الملخص والهدف -->
-        <div class="bg-slate-900 shadow-sm rounded-3xl p-6 text-center border border-slate-800 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-emerald-600 text-white text-xs px-4 py-1.5 rounded-bl-xl font-bold">
+        <div class="bg-slate-900 shadow-sm rounded-3xl p-5 pt-8 text-center border border-slate-800 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[11px] px-3.5 py-1 rounded-bl-xl font-bold shadow-sm">
                 الهدف: 500,000 ر.س
             </div>
             
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">إجمالي المدخرات الحالية</p>
-            <div class="text-4xl sm:text-5xl font-extrabold text-emerald-400 mb-4 tracking-tight">
-                <span id="total-savings">0.00</span> <span class="text-2xl font-bold text-slate-400">ر.س</span>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">إجمالي المدخرات الحالية</p>
+            <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400 mb-4 tracking-tight">
+                <span id="total-savings">0.00</span> <span class="text-xl font-bold text-slate-400">ر.س</span>
             </div>
             
             <!-- شريط التقدم للهدف -->
@@ -60,7 +60,7 @@
         </button>
 
         <!-- نموذج إضافة أو سحب مبلغ جديد (مطوي افتراضياً) -->
-        <div id="form-container" class="bg-slate-900 shadow-sm rounded-2xl p-5 border border-slate-800 hidden transition-all duration-300">
+        <div id="form-container" class="bg-slate-900 shadow-sm rounded-2xl p-4 sm:p-5 border border-slate-800 hidden transition-all duration-300">
             <div class="flex justify-between items-center mb-3.5">
                 <h2 class="text-sm font-bold text-white flex items-center gap-2">
                     <span>📝</span> تفاصيل الحركة الجديدة
@@ -82,7 +82,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-400 mb-1">السبب / الوصف</label>
-                        <input type="text" id="note" placeholder="مثال: توفير شهري أو ظرف طارئ" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-200">
+                        <input type="text" id="note" placeholder="مثال: توفير شهري" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-200">
                     </div>
                 </div>
                 <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2">
@@ -103,22 +103,22 @@
             <div class="p-4 border-b border-slate-800 flex justify-between items-center">
                 <h2 class="text-sm font-bold text-white">📋 سجل المدخرات والحركات</h2>
                 <div class="flex items-center gap-2">
-                    <span id="items-count" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md">0 حركة</span>
+                    <span id="items-count" class="text-xs font-bold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md">0 حركة</span>
                     <button onclick="toggleTable()" class="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 bg-slate-800 rounded-lg">إخفاء ✕</button>
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-right border-collapse">
+                <table class="w-full text-right border-collapse whitespace-nowrap">
                     <thead>
-                        <tr class="bg-slate-950/50 text-slate-400 text-xs font-bold border-b border-slate-800">
-                            <th class="p-3.5">نوع الحركة</th>
-                            <th class="p-3.5">المبلغ</th>
-                            <th class="p-3.5">الوصف</th>
-                            <th class="p-3.5">التاريخ</th>
-                            <th class="p-3.5 text-center">إجراء</th>
+                        <tr class="bg-slate-950/60 text-slate-400 text-xs font-bold border-b border-slate-800">
+                            <th class="p-3">نوع الحركة</th>
+                            <th class="p-3">المبلغ</th>
+                            <th class="p-3">الوصف</th>
+                            <th class="p-3">التاريخ</th>
+                            <th class="p-3 text-center">إجراء</th>
                         </tr>
                     </thead>
-                    <tbody id="savings-table-body" class="divide-y divide-slate-800 text-sm text-slate-300">
+                    <tbody id="savings-table-body" class="divide-y divide-slate-800/80 text-sm text-slate-300">
                         <tr>
                             <td colspan="5" class="p-8 text-center text-slate-500 text-xs">جاري المزامنة مع السحابة... ⏳</td>
                         </tr>
@@ -266,11 +266,11 @@
                 const tr = document.createElement("tr");
                 tr.className = "hover:bg-slate-800/50 transition-colors";
                 tr.innerHTML = `
-                    <td class="p-3.5"><span class="text-xs px-2.5 py-1 rounded-full font-bold border ${badgeClass}">${badgeText}</span></td>
-                    <td class="p-3.5 ${amountClass}">${displayAmount} ر.س</td>
-                    <td class="p-3.5 text-slate-200 font-medium">${data.note}</td>
-                    <td class="p-3.5 text-slate-400 text-xs">${data.date || '-'}</td>
-                    <td class="p-3.5 text-center">
+                    <td class="p-3"><span class="inline-block text-[11px] px-2 py-1 rounded-full font-bold border ${badgeClass}">${badgeText}</span></td>
+                    <td class="p-3 ${amountClass}">${displayAmount} ر.س</td>
+                    <td class="p-3 text-slate-200 font-medium">${data.note}</td>
+                    <td class="p-3 text-slate-400 text-xs">${data.date || '-'}</td>
+                    <td class="p-3 text-center">
                         <button onclick="deleteItem('${docSnap.id}')" class="text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
                     </td>
                 `;
