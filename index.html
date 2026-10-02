@@ -3,289 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تجميع الادخار والهدف المالي</title>
+    <title>لوحة الادخار الذكية</title>
     <style>
         :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #81c784;
-            --danger-bg: #ffebee;
-            --danger-text: #c62828;
-            --box-color: #1976d2;
-            --box-active: #43a047;
-            --bg-color: #f4f6f8;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --bg-main: #f8fafc;
             --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             padding: 20px;
-            color: #333;
+            display: flex;
+            justify-content: center;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
+        .app-container {
+            width: 100%;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background: var(--card-bg);
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        h2 {
-            text-align: center;
-            color: #111;
-            margin-bottom: 20px;
+        header h1 {
+            font-size: 1.3rem;
+            color: var(--text-main);
         }
 
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
         }
 
-        .summary-table th {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px;
-            font-size: 1.2rem;
-            text-align: center;
+        /* Summary Dashboard */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
-        .summary-table td {
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            font-size: 1.1rem;
-            font-weight: bold;
+        .summary-box {
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .summary-table td.label {
-            background-color: #fafafa;
-            width: 40%;
+        .summary-box.available {
+            background-color: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
         }
 
-        .summary-table td.value {
-            text-align: left;
+        .summary-box.target {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        .summary-box.remaining {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .summary-box .title {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .summary-box .value {
+            font-size: 1.25rem;
+            font-weight: 700;
             direction: ltr;
         }
 
-        .target-row input {
-            width: 100%;
-            padding: 5px;
-            font-size: 1rem;
-            font-weight: bold;
+        .summary-box input {
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: none;
+            background: transparent;
             text-align: left;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: 150px;
+            color: inherit;
+            outline: none;
+            border-bottom: 1px dashed currentColor;
         }
 
-        .remaining-row {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 15px;
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #555;
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
-        .grid-container {
+        .progress-bar-bg {
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 999px;
+        }
+
+        /* Settings Row */
+        .settings-row {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .grid-box {
-            background-color: #e3f2fd;
-            border: 2px solid var(--box-color);
-            color: var(--box-color);
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-        }
-
-        .grid-box.active {
-            background-color: var(--box-active);
-            border-color: #2e7d32;
-            color: white;
-        }
-
-        .controls {
-            display: flex;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 15px;
         }
 
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            background: var(--bg-main);
+        }
+
+        .input-group input:focus {
+            border-color: var(--secondary);
+        }
+
+        /* Grid Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-header h3 {
+            font-size: 1.05rem;
+        }
+
+        .grid-boxes {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .box {
+            aspect-ratio: 1;
+            background: var(--bg-main);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .box .num {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .box.active {
+            background-color: var(--primary);
+            border-color: var(--primary-dark);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .box.active .num {
+            color: white;
+        }
+
+        .box .check-icon {
+            font-size: 0.75rem;
+            margin-top: 2px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.2s ease;
+        }
+
+        .box.active .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Actions Footer */
+        .actions-footer {
+            display: flex;
+            gap: 10px;
+        }
+
         .btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 10px;
+            font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
+            font-size: 0.9rem;
         }
 
-        .btn-reset {
-            background-color: #ffebee;
-            color: #c62828;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
         }
 
-        .btn-reset:hover {
-            background-color: #ffcdd2;
+        .btn-outline:hover {
+            background: var(--border-color);
         }
 
-        .monthly-input-section {
-            background: #fafafa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #eee;
+        .btn-danger {
+            background-color: #fef2f2;
+            color: var(--danger);
         }
 
-        .monthly-input-section label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+        .btn-danger:hover {
+            background-color: #fee2e2;
         }
 
-        .monthly-input-section input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
+        @media (max-width: 480px) {
+            .grid-boxes {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>تجميع الادخار</h2>
-
-    <!-- جدول الملخص -->
-    <table class="summary-table">
-        <thead>
-            <tr>
-                <th colspan="2">ملخص الحساب</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="label">المبلغ المتوفر</td>
-                <td class="value" id="totalSaved">0</td>
-            </tr>
-            <tr class="target-row">
-                <td class="label">الهدف الكلي</td>
-                <td class="value">
-                    <input type="number" id="targetInput" value="500000" onchange="updateValues()">
-                </td>
-            </tr>
-            <tr class="remaining-row">
-                <td class="label">باقي عن الهدف</td>
-                <td class="value" id="remainingAmount">500,000</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- إدخال قيمة المربع الواحد (الدخل/الادخار الشهري) -->
-    <div class="monthly-input-section">
-        <label for="monthlyValueInput">قيمة المدخر الشهري لكل مربع (ريال):</label>
-        <input type="number" id="monthlyValueInput" value="5000" onchange="updateValues()">
-    </div>
-
-    <div class="section-title">خطة المربعات (اضغط على المربع لتفعيله عند إنجازه):</div>
+<div class="app-container">
     
-    <!-- شبكة المربعات (مثال 20 مربعاً تمثل شهور أو دفعات) -->
-    <div class="grid-container" id="gridContainer">
-        <!-- سيتم إنشاؤها عبر البرمجة أو يدوياً -->
+    <!-- العنوان العلوي -->
+    <header>
+        <h1>لوحة متابعة الادخار</h1>
+        <div style="font-size: 0.85rem; color: var(--text-muted);" id="currentDate"></div>
+    </header>
+
+    <!-- لوحة المؤشرات -->
+    <div class="card">
+        <div class="summary-grid">
+            <div class="summary-box available">
+                <span class="title">المبلغ المتوفر</span>
+                <span class="value" id="totalSavedDisplay">0 ر.س</span>
+            </div>
+            
+            <div class="summary-box target">
+                <span class="title">الهدف الكلي</span>
+                <input type="number" id="targetInput" value="500000" onchange="saveData()">
+            </div>
+            
+            <div class="summary-box remaining">
+                <span class="title">باقي عن الهدف</span>
+                <span class="value" id="remainingDisplay">500,000 ر.س</span>
+            </div>
+        </div>
+
+        <!-- شريط التقدم -->
+        <div class="progress-container">
+            <div class="progress-info">
+                <span>نسبة الإنجاز</span>
+                <span id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+        </div>
+
+        <!-- إعدادات مخصصة -->
+        <div class="settings-row">
+            <div class="input-group">
+                <label for="boxValueInput">قيمة المربع/الشهري (ر.س)</label>
+                <input type="number" id="boxValueInput" value="5000" onchange="saveData()">
+            </div>
+            <div class="input-group">
+                <label for="totalBoxesInput">إعدد المربعات الكلي</label>
+                <input type="number" id="totalBoxesInput" value="20" onchange="updateTotalBoxes()">
+            </div>
+        </div>
     </div>
 
-    <div class="controls">
-        <button class="btn btn-reset" onclick="resetData()">إعادة ضبط البيانات</button>
+    <!-- شبكة المربعات التفصيلية -->
+    <div class="card">
+        <div class="section-header">
+            <h3>الدفعات أو الشهور (اضغط للتفعيل)</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="activeCountText">0 من 20 مكتمل</span>
+        </div>
+        <div class="grid-boxes" id="gridContainer"></div>
     </div>
+
+    <!-- أزرار التحكم -->
+    <div class="actions-footer">
+        <button class="btn btn-outline" onclick="selectAllBoxes()">تحديد الكل</button>
+        <button class="btn btn-danger" onclick="resetData()">إعادة ضبط</button>
+    </div>
+
 </div>
 
 <script>
-    const totalBoxes = 20; // عدد المربعات الكلي
-    let boxesState = JSON.parse(localStorage.getItem('boxesState')) || Array(totalBoxes).fill(false);
-    let targetGoal = localStorage.getItem('targetGoal') ? Number(localStorage.getItem('targetGoal')) : 500000;
-    let monthlyValue = localStorage.getItem('monthlyValue') ? Number(localStorage.getItem('monthlyValue')) : 5000;
+    // تهيئة البيانات
+    let targetGoal = Number(localStorage.getItem('pro_targetGoal')) || 500000;
+    let boxValue = Number(localStorage.getItem('pro_boxValue')) || 5000;
+    let totalBoxes = Number(localStorage.getItem('pro_totalBoxes')) || 20;
+    let boxesState = JSON.parse(localStorage.getItem('pro_boxesState')) || Array(totalBoxes).fill(false);
 
+    // ربط المدخلات بالقيم المحفوظة
     document.getElementById('targetInput').value = targetGoal;
-    document.getElementById('monthlyValueInput').value = monthlyValue;
+    document.getElementById('boxValueInput').value = boxValue;
+    document.getElementById('totalBoxesInput').value = totalBoxes;
+
+    // عرض تاريخ اليوم بتنسيق عربي جميل
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-SA', options);
 
     function initGrid() {
         const container = document.getElementById('gridContainer');
         container.innerHTML = '';
-        
+
         for (let i = 0; i < totalBoxes; i++) {
             const box = document.createElement('div');
-            box.classList.add('grid-box');
-            box.innerText = i + 1;
+            box.className = `box ${boxesState[i] ? 'active' : ''}`;
             
-            if (boxesState[i]) {
-                box.classList.add('active');
-            }
+            box.innerHTML = `
+                <span class="num">${i + 1}</span>
+                <span class="check-icon">✔</span>
+            `;
 
             box.onclick = () => {
                 boxesState[i] = !boxesState[i];
                 box.classList.toggle('active');
-                saveAndCalculate();
+                saveData();
             };
 
             container.appendChild(box);
         }
-        calculateTotals();
+        calculate();
     }
 
-    function updateValues() {
+    function calculate() {
         targetGoal = Number(document.getElementById('targetInput').value) || 0;
-        monthlyValue = Number(document.getElementById('monthlyValueInput').value) || 0;
-        saveAndCalculate();
-    }
+        boxValue = Number(document.getElementById('boxValueInput').value) || 0;
 
-    function calculateTotals() {
         const activeCount = boxesState.filter(Boolean).length;
-        const totalSaved = activeCount * monthlyValue;
+        const totalSaved = activeCount * boxValue;
         const remaining = Math.max(0, targetGoal - totalSaved);
+        const percentage = targetGoal > 0 ? Math.min(100, Math.round((totalSaved / targetGoal) * 100)) : 0;
 
-        document.getElementById('totalSaved').innerText = totalSaved.toLocaleString();
-        document.getElementById('remainingAmount').innerText = remaining.toLocaleString();
+        // تحديث الواجهة
+        document.getElementById('totalSavedDisplay').innerText = totalSaved.toLocaleString() + ' ر.س';
+        document.getElementById('remainingDisplay').innerText = remaining.toLocaleString() + ' ر.س';
+        document.getElementById('progressPercentage').innerText = percentage + '%';
+        document.getElementById('progressBarFill').style.width = percentage + '%';
+        document.getElementById('activeCountText').innerText = `${activeCount} من ${totalBoxes} مكتمل`;
     }
 
-    function saveAndCalculate() {
-        localStorage.setItem('boxesState', JSON.stringify(boxesState));
-        localStorage.setItem('targetGoal', targetGoal);
-        localStorage.setItem('monthlyValue', monthlyValue);
-        calculateTotals();
+    function saveData() {
+        targetGoal = Number(document.getElementById('targetInput').value);
+        boxValue = Number(document.getElementById('boxValueInput').value);
+
+        localStorage.setItem('pro_targetGoal', targetGoal);
+        localStorage.setItem('pro_boxValue', boxValue);
+        localStorage.setItem('pro_totalBoxes', totalBoxes);
+        localStorage.setItem('pro_boxesState', JSON.stringify(boxesState));
+
+        calculate();
+    }
+
+    function updateTotalBoxes() {
+        const newTotal = Number(document.getElementById('totalBoxesInput').value);
+        if (newTotal > 0 && newTotal <= 200) {
+            totalBoxes = newTotal;
+            if (boxesState.length < totalBoxes) {
+                boxesState = boxesState.concat(Array(totalBoxes - boxesState.length).fill(false));
+            } else {
+                boxesState = boxesState.slice(0, totalBoxes);
+            }
+            saveData();
+            initGrid();
+        }
+    }
+
+    function selectAllBoxes() {
+        if (confirm('هل تريد تحديد جميع المربعات كمكتملة؟')) {
+            boxesState = Array(totalBoxes).fill(true);
+            saveData();
+            initGrid();
+        }
     }
 
     function resetData() {
-        if (confirm('هل أنت متأكد من إعادة ضبط كافة البيانات؟')) {
-            boxesState = Array(totalBoxes).fill(false);
+        if (confirm('هل أنت متأكد من تصفير كافة البيانات وإعادة الضبط؟')) {
             localStorage.clear();
             location.reload();
         }
     }
 
-    // تشغيل التطبيق عند التحميل
+    // التشغيل الأول
     initGrid();
 </script>
 
