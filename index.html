@@ -11,40 +11,40 @@
         body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-16 text-slate-800">
+<body class="bg-slate-950 min-h-screen pb-16 text-slate-100">
 
     <div class="max-w-xl mx-auto p-4 sm:p-6 space-y-6">
         
         <!-- رأس الصفحة -->
-        <header class="bg-white shadow-sm rounded-2xl p-4 sm:p-5 flex justify-between items-center border border-slate-200/60">
+        <header class="bg-slate-900 shadow-sm rounded-2xl p-4 sm:p-5 flex justify-between items-center border border-slate-800">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold border border-emerald-500/20">
                     💎
                 </div>
                 <div>
-                    <h1 class="text-base font-extrabold text-slate-900">الادخار الشهري</h1>
+                    <h1 class="text-base font-extrabold text-white">الادخار الشهري</h1>
                     <p class="text-xs text-slate-400">إدارة وتتبع المدخرات السحابية</p>
                 </div>
             </div>
-            <div id="connection-status" class="bg-emerald-50 text-emerald-700 text-xs px-3 py-1.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <div id="connection-status" class="bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-bold border border-emerald-500/20 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 السحابة متصلة
             </div>
         </header>
 
         <!-- لوحة الملخص والهدف -->
-        <div class="bg-white shadow-sm rounded-3xl p-6 text-center border border-slate-200/60 relative overflow-hidden">
+        <div class="bg-slate-900 shadow-sm rounded-3xl p-6 text-center border border-slate-800 relative overflow-hidden">
             <div class="absolute top-0 right-0 bg-emerald-600 text-white text-xs px-4 py-1.5 rounded-bl-xl font-bold">
                 الهدف: 500,000 ر.س
             </div>
             
             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">إجمالي المدخرات الحالية</p>
-            <div class="text-4xl sm:text-5xl font-extrabold text-emerald-600 mb-4 tracking-tight">
-                <span id="total-savings">0.00</span> <span class="text-2xl font-bold text-slate-500">ر.س</span>
+            <div class="text-4xl sm:text-5xl font-extrabold text-emerald-400 mb-4 tracking-tight">
+                <span id="total-savings">0.00</span> <span class="text-2xl font-bold text-slate-400">ر.س</span>
             </div>
             
             <!-- شريط التقدم للهدف -->
-            <div class="w-full bg-slate-100 rounded-full h-3 mb-2.5 overflow-hidden p-0.5">
+            <div class="w-full bg-slate-800 rounded-full h-3 mb-2.5 overflow-hidden p-0.5">
                 <div id="progress-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
             </div>
             <div class="flex justify-between text-xs text-slate-400 font-bold px-1">
@@ -54,63 +54,63 @@
         </div>
 
         <!-- زر فتح/إغلاق نموذج إضافة حركة -->
-        <button id="toggle-form-btn" onclick="toggleForm()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-2xl text-sm shadow-sm transition flex items-center justify-center gap-2">
+        <button id="toggle-form-btn" onclick="toggleForm()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-4 rounded-2xl text-sm shadow-sm transition flex items-center justify-center gap-2">
             <span>➕</span>
             <span>إضافة حركة جديدة (إيداع / سحب)</span>
         </button>
 
         <!-- نموذج إضافة أو سحب مبلغ جديد (مطوي افتراضياً) -->
-        <div id="form-container" class="bg-white shadow-sm rounded-2xl p-5 border border-slate-200/60 hidden transition-all duration-300">
+        <div id="form-container" class="bg-slate-900 shadow-sm rounded-2xl p-5 border border-slate-800 hidden transition-all duration-300">
             <div class="flex justify-between items-center mb-3.5">
-                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <h2 class="text-sm font-bold text-white flex items-center gap-2">
                     <span>📝</span> تفاصيل الحركة الجديدة
                 </h2>
-                <button onclick="toggleForm()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2 py-1 bg-slate-100 rounded-lg">إخفاء ✕</button>
+                <button onclick="toggleForm()" class="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 bg-slate-800 rounded-lg">إخفاء ✕</button>
             </div>
             <form id="saving-form" class="space-y-3.5">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">نوع الحركة</label>
-                        <select id="action-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-700">
+                        <label class="block text-xs font-bold text-slate-400 mb-1">نوع الحركة</label>
+                        <select id="action-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-200">
                             <option value="deposit">🟢 إيداع (توفير)</option>
                             <option value="withdraw">🔴 سحب من المدخرات</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">المبلغ (ر.س)</label>
-                        <input type="number" id="amount" step="0.01" placeholder="مثال: 8000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-700">
+                        <label class="block text-xs font-bold text-slate-400 mb-1">المبلغ (ر.س)</label>
+                        <input type="number" id="amount" step="0.01" placeholder="مثال: 8000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-200">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">السبب / الوصف</label>
-                        <input type="text" id="note" placeholder="مثال: توفير شهري أو ظرف طارئ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-700">
+                        <label class="block text-xs font-bold text-slate-400 mb-1">السبب / الوصف</label>
+                        <input type="text" id="note" placeholder="مثال: توفير شهري أو ظرف طارئ" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-200">
                     </div>
                 </div>
-                <button type="submit" id="submit-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2">
+                <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2">
                     <span>حفظ في السحابة</span>
-                    <span>☁️️</span>
+                    <span>☁️</span>
                 </button>
             </form>
         </div>
 
         <!-- زر فتح/إغلاق سجل الحركات (مطوي افتراضياً) -->
-        <button id="toggle-table-btn" onclick="toggleTable()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 px-4 rounded-2xl text-sm shadow-sm transition flex items-center justify-center gap-2">
+        <button id="toggle-table-btn" onclick="toggleTable()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-sm shadow-sm border border-slate-800 transition flex items-center justify-center gap-2">
             <span>📋</span>
             <span id="table-btn-text">إظهار سجل المدخرات والحركات</span>
         </button>
 
         <!-- جدول الحركات السحابية (مطوي افتراضياً) -->
-        <div id="table-container" class="bg-white shadow-sm rounded-2xl overflow-hidden border border-slate-200/60 hidden transition-all duration-300">
-            <div class="p-4 border-b border-slate-100 flex justify-between items-center">
-                <h2 class="text-sm font-bold text-slate-800">📋 سجل المدخرات والحركات</h2>
+        <div id="table-container" class="bg-slate-900 shadow-sm rounded-2xl overflow-hidden border border-slate-800 hidden transition-all duration-300">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center">
+                <h2 class="text-sm font-bold text-white">📋 سجل المدخرات والحركات</h2>
                 <div class="flex items-center gap-2">
-                    <span id="items-count" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">0 حركة</span>
-                    <button onclick="toggleTable()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2 py-1 bg-slate-100 rounded-lg">إخفاء ✕</button>
+                    <span id="items-count" class="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md">0 حركة</span>
+                    <button onclick="toggleTable()" class="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 bg-slate-800 rounded-lg">إخفاء ✕</button>
                 </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-right border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 text-slate-400 text-xs font-bold border-b border-slate-100">
+                        <tr class="bg-slate-950/50 text-slate-400 text-xs font-bold border-b border-slate-800">
                             <th class="p-3.5">نوع الحركة</th>
                             <th class="p-3.5">المبلغ</th>
                             <th class="p-3.5">الوصف</th>
@@ -118,9 +118,9 @@
                             <th class="p-3.5 text-center">إجراء</th>
                         </tr>
                     </thead>
-                    <tbody id="savings-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                    <tbody id="savings-table-body" class="divide-y divide-slate-800 text-sm text-slate-300">
                         <tr>
-                            <td colspan="5" class="p-8 text-center text-slate-400 text-xs">جاري المزامنة مع السحابة... ⏳</td>
+                            <td colspan="5" class="p-8 text-center text-slate-500 text-xs">جاري المزامنة مع السحابة... ⏳</td>
                         </tr>
                     </tbody>
                 </table>
@@ -244,7 +244,7 @@
             itemsCount.textContent = `${snapshot.size} حركة`;
             
             if(snapshot.empty) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 text-xs">لا توجد مدخرات مسجلة حتى الآن.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500 text-xs">لا توجد مدخرات مسجلة حتى الآن.</td></tr>`;
                 totalSavingsEl.textContent = "0.00";
                 progressBar.style.width = "0%";
                 progressText.textContent = "0% من الهدف";
@@ -258,20 +258,20 @@
                 total += numAmount;
 
                 const isWithdraw = data.type === 'withdraw' || numAmount < 0;
-                const badgeClass = isWithdraw ? "bg-rose-50 text-rose-600 border-rose-200" : "bg-emerald-50 text-emerald-600 border-emerald-200";
+                const badgeClass = isWithdraw ? "bg-rose-500/10 text-rose-400 border-rose-500/20" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
                 const badgeText = isWithdraw ? "سحب 🔻" : "إيداع 🟢";
-                const amountClass = isWithdraw ? "text-rose-600 font-bold" : "text-emerald-600 font-bold";
+                const amountClass = isWithdraw ? "text-rose-400 font-bold" : "text-emerald-400 font-bold";
                 const displayAmount = (isWithdraw ? "- " : "+ ") + formatMoney(Math.abs(numAmount));
 
                 const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.className = "hover:bg-slate-800/50 transition-colors";
                 tr.innerHTML = `
                     <td class="p-3.5"><span class="text-xs px-2.5 py-1 rounded-full font-bold border ${badgeClass}">${badgeText}</span></td>
                     <td class="p-3.5 ${amountClass}">${displayAmount} ر.س</td>
-                    <td class="p-3.5 text-slate-700 font-medium">${data.note}</td>
+                    <td class="p-3.5 text-slate-200 font-medium">${data.note}</td>
                     <td class="p-3.5 text-slate-400 text-xs">${data.date || '-'}</td>
                     <td class="p-3.5 text-center">
-                        <button onclick="deleteItem('${docSnap.id}')" class="text-rose-600 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                        <button onclick="deleteItem('${docSnap.id}')" class="text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -292,7 +292,7 @@
 
         }, (error) => {
             console.error("خطأ في الاتصال بقاعدة البيانات:", error);
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-rose-500 text-xs">تعذر جلب البيانات من السحابة، يرجى التأكد من الاتصال.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-rose-400 text-xs">تعذر جلب البيانات من السحابة، يرجى التأكد من الاتصال.</td></tr>`;
         });
 
         window.deleteItem = async function(id) {
