@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
+        .collapse-transition { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-16 text-slate-800">
@@ -53,11 +54,20 @@
             </div>
         </div>
 
-        <!-- نموذج إضافة أو سحب مبلغ جديد -->
-        <div class="bg-white shadow-sm rounded-2xl p-5 border border-slate-200/60">
-            <h2 class="text-sm font-bold text-slate-800 mb-3.5 flex items-center gap-2">
-                <span>➕</span> إضافة حركة جديدة (إيداع / سحب)
-            </h2>
+        <!-- زر فتح/إغلاق نموذج إضافة حركة -->
+        <button id="toggle-form-btn" onclick="toggleForm()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-2xl text-sm shadow-sm transition flex items-center justify-center gap-2">
+            <span>➕</span>
+            <span>إضافة حركة جديدة (إيداع / سحب)</span>
+        </button>
+
+        <!-- نموذج إضافة أو سحب مبلغ جديد (مطوي افتراضياً) -->
+        <div id="form-container" class="bg-white shadow-sm rounded-2xl p-5 border border-slate-200/60 hidden transition-all duration-300">
+            <div class="flex justify-between items-center mb-3.5">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <span>📝</span> تفاصيل الحركة الجديدة
+                </h2>
+                <button onclick="toggleForm()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2 py-1 bg-slate-100 rounded-lg">إخفاء ✕</button>
+            </div>
             <form id="saving-form" class="space-y-3.5">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
@@ -69,14 +79,14 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">المبلغ (ر.س)</label>
-                        <input type="number" id="amount" step="0.01" required placeholder="مثال: 8000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-700">
+                        <input type="number" id="amount" step="0.01" placeholder="مثال: 8000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">السبب / الوصف</label>
-                        <input type="text" id="note" required placeholder="مثال: توفير شهري أو ظرف طارئ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-700">
+                        <input type="text" id="note" placeholder="مثال: توفير شهري أو ظرف طارئ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-slate-700">
                     </div>
                 </div>
-                <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2">
+                <button type="submit" id="submit-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2">
                     <span>حفظ في السحابة</span>
                     <span>☁️</span>
                 </button>
@@ -101,7 +111,6 @@
                         </tr>
                     </thead>
                     <tbody id="savings-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
-                        <!-- تظهر البيانات ديناميكياً من السحابة -->
                         <tr>
                             <td colspan="5" class="p-8 text-center text-slate-400 text-xs">جاري المزامنة مع السحابة... ⏳</td>
                         </tr>
@@ -131,6 +140,7 @@
         const db = getFirestore(app);
 
         const form = document.getElementById("saving-form");
+        const formContainer = document.getElementById("form-container");
         const tableBody = document.getElementById("savings-table-body");
         const totalSavingsEl = document.getElementById("total-savings");
         const progressBar = document.getElementById("progress-bar");
@@ -141,6 +151,15 @@
 
         const TARGET_GOAL = 500000;
         const SECRET_HASH = ["D", "d", "1", "6", "1", "6"];
+
+        // دالة طي وإظهار النموذج
+        window.toggleForm = function() {
+            if (formContainer.classList.contains("hidden")) {
+                formContainer.classList.remove("hidden");
+            } else {
+                formContainer.classList.add("hidden");
+            }
+        };
 
         function verifyPin() {
             const input = prompt("الرجاء إدخال الرقم السري:");
@@ -165,6 +184,11 @@
             let amount = parseFloat(document.getElementById("amount").value);
             const note = document.getElementById("note").value;
 
+            if (!amount || !note) {
+                alert("الرجاء إدخال المبلغ والوصف بدقة!");
+                return;
+            }
+
             if (type === "withdraw") {
                 amount = -Math.abs(amount);
             } else {
@@ -183,6 +207,7 @@
                     date: new Date().toLocaleDateString('ar-SA')
                 });
                 form.reset();
+                formContainer.classList.add("hidden"); // طي النموذج تلقائياً بعد الحفظ
             } catch (error) {
                 console.error("خطأ:", error);
                 alert("حدث خطأ أثناء الحفظ!");
@@ -192,7 +217,6 @@
             }
         });
 
-        // جلب البيانات مباشرة من السحابة مرتبة حسب التاريخ (الأحدث أولاً)
         const q = query(collection(db, "savings"), orderBy("createdAt", "desc"));
         
         onSnapshot(q, (snapshot) => {
