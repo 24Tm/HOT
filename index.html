@@ -18,8 +18,8 @@
         <!-- رأس الصفحة -->
         <header class="bg-white shadow-sm rounded-2xl p-5 flex justify-between items-center border border-slate-200/60">
             <div>
-                <h1 class="text-xl font-extrabold text-slate-900"> الادخار الشهري</h1>
-                <p class="text-xs text-slate-500 mt-0.5">إدارة وتتبع المدخرات </p>
+                <h1 class="text-xl font-extrabold text-slate-900">الادخار الشهري</h1>
+                <p class="text-xs text-slate-500 mt-0.5">إدارة وتتبع المدخرات</p>
             </div>
             <div id="connection-status" class="bg-emerald-50 text-emerald-700 text-xs px-3 py-1.5 rounded-full font-bold border border-emerald-200">
                 متصل بالسحابة ✅
@@ -47,21 +47,28 @@
             </div>
         </div>
 
-        <!-- نموذج إضافة مبلغ جديد -->
+        <!-- نموذج إضافة أو سحب مبلغ جديد -->
         <div class="bg-white shadow-sm rounded-2xl p-5 border border-slate-200/60">
-            <h2 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-1.5">➕ إضافة حركة جديدة</h2>
+            <h2 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-1.5">➕ إضافة حركة جديدة (إيداع / سحب)</h2>
             <form id="saving-form" class="space-y-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">نوع الحركة</label>
+                        <select id="action-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold">
+                            <option value="deposit">إيداع (توفير)</option>
+                            <option value="withdraw">سحب من المدخرات</option>
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">المبلغ (ر.س)</label>
                         <input type="number" id="amount" step="0.01" required placeholder="مثال: 8000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">السبب / الوصف</label>
-                        <input type="text" id="note" required placeholder="مثال: توفير شهري" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <input type="text" id="note" required placeholder="مثال: توفير شهري أو ظرف طارئ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99]">
+                <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm shadow-sm transition active:scale-[0.99]">
                     حفظ في السحابة ☁️
                 </button>
             </form>
@@ -70,12 +77,13 @@
         <!-- جدول الحركات السحابية -->
         <div class="bg-white shadow-sm rounded-2xl overflow-hidden border border-slate-200/60">
             <div class="p-4 border-b border-slate-100">
-                <h2 class="text-sm font-bold text-slate-800">📋 سجل المدخرات</h2>
+                <h2 class="text-sm font-bold text-slate-800">📋 سجل المدخرات والحركات</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-right border-collapse">
                     <thead>
                         <tr class="bg-slate-50 text-slate-400 text-xs font-bold">
+                            <th class="p-3.5">نوع الحركة</th>
                             <th class="p-3.5">المبلغ</th>
                             <th class="p-3.5">الوصف</th>
                             <th class="p-3.5">التاريخ</th>
@@ -83,7 +91,10 @@
                         </tr>
                     </thead>
                     <tbody id="savings-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
-                        <!-- تضاف البيانات ديناميكياً هنا -->
+                        <!-- تضاف البيانات ديناميكياً هنا مع مؤشر التحميل -->
+                        <tr>
+                            <td colspan="5" class="p-6 text-center text-slate-400 text-xs">جاري الاتصال وجلب البيانات من القاعدة... ⏳</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -94,7 +105,7 @@
     <!-- Firebase SDKs & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyAcSBoqPSwOADYTRN6a_CUkHbxzaC0VxBs",
@@ -114,6 +125,7 @@
         const totalSavingsEl = document.getElementById("total-savings");
         const progressBar = document.getElementById("progress-bar");
         const progressText = document.getElementById("progress-text");
+        const submitBtn = document.getElementById("submit-btn");
 
         const TARGET_GOAL = 500000;
         const SECRET_HASH = ["D", "d", "1", "6", "1", "6"];
@@ -137,47 +149,77 @@
                 return;
             }
 
-            const amount = parseFloat(document.getElementById("amount").value);
+            const type = document.getElementById("action-type").value;
+            let amount = parseFloat(document.getElementById("amount").value);
             const note = document.getElementById("note").value;
+
+            // إذا كانت الحركة سحب، نجعل المبلغ بالسالب
+            if (type === "withdraw") {
+                amount = -Math.abs(amount);
+            } else {
+                amount = Math.abs(amount);
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "جاري الحفظ... ⏳";
 
             try {
                 await addDoc(collection(db, "savings"), {
                     amount: amount,
+                    type: type,
                     note: note,
+                    createdAt: serverTimestamp(),
                     date: new Date().toLocaleDateString('ar-SA')
                 });
                 form.reset();
             } catch (error) {
                 console.error("خطأ:", error);
                 alert("حدث خطأ أثناء الحفظ!");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "حفظ في السحابة ☁️";
             }
         });
 
+        // جلب البيانات مرتبة حسب الأحدث لتحسين تجربة الاستجابة
         const q = query(collection(db, "savings"));
+        
         onSnapshot(q, (snapshot) => {
             let total = 0;
             tableBody.innerHTML = "";
             
             if(snapshot.empty) {
-                tableBody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 text-xs">لا توجد مدخرات مسجلة حتى الآن.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs">لا توجد مدخرات مسجلة حتى الآن.</td></tr>`;
                 totalSavingsEl.textContent = "0.00";
                 progressBar.style.width = "0%";
                 progressText.textContent = "0% من الهدف";
                 return;
             }
 
+            // ترتيب البيانات محلياً للأحدث لضمان عدم تأخر العرض
+            const docsList = [];
             snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
+                docsList.push({ id: docSnap.id, ...docSnap.data() });
+            });
+
+            docsList.forEach((data) => {
                 const numAmount = Number(data.amount) || 0;
                 total += numAmount;
 
+                const isWithdraw = data.type === 'withdraw' || numAmount < 0;
+                const badgeClass = isWithdraw ? "bg-rose-50 text-rose-600 border-rose-200" : "bg-emerald-50 text-emerald-600 border-emerald-200";
+                const badgeText = isWithdraw ? "سحب 🔻" : "إيداع 🟢";
+                const amountClass = isWithdraw ? "text-rose-600" : "text-emerald-600";
+                const displayAmount = (isWithdraw ? "- " : "+ ") + formatMoney(Math.abs(numAmount));
+
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td class="p-3.5 font-bold text-emerald-600">${formatMoney(numAmount)} ر.س</td>
+                    <td class="p-3.5"><span class="text-xs px-2.5 py-1 rounded-full font-bold border ${badgeClass}">${badgeText}</span></td>
+                    <td class="p-3.5 font-bold ${amountClass}">${displayAmount} ر.س</td>
                     <td class="p-3.5">${data.note}</td>
                     <td class="p-3.5 text-slate-400 text-xs">${data.date || '-'}</td>
                     <td class="p-3.5 text-center">
-                        <button onclick="deleteItem('${docSnap.id}')" class="text-rose-600 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg text-xs font-bold transition">حذف</button>
+                        <button onclick="deleteItem('${data.id}')" class="text-rose-600 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg text-xs font-bold transition">حذف</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -186,9 +228,13 @@
             totalSavingsEl.textContent = formatMoney(total);
             
             let percentage = (total / TARGET_GOAL) * 100;
+            if (percentage < 0) percentage = 0;
             if (percentage > 100) percentage = 100;
             progressBar.style.width = percentage.toFixed(1) + "%";
             progressText.textContent = percentage.toFixed(1) + "% من الهدف";
+        }, (error) => {
+            console.error("خطأ في الاتصال بقاعدة البيانات:", error);
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-rose-500 text-xs">تعذر جلب البيانات، يجدر التحقق من الاتصال.</td></tr>`;
         });
 
         window.deleteItem = async function(id) {
